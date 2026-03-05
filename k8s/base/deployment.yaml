@@ -1,29 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: test-app
+  labels:
+    app: pipelines-vote-ui
+  name: pipelines-vote-ui
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: test-app
+      app: pipelines-vote-ui
   template:
     metadata:
       labels:
-        app: test-app
+        app: pipelines-vote-ui
     spec:
       containers:
-      - name: app
-        image: docker.io/your-username/test-app:latest
-        ports:
-        - containerPort: 3000
-        env:
-        - name: APP_VERSION
-          value: "1.0.0"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
+        - image: quay.io/openshift-pipeline/vote-ui:latest
+          imagePullPolicy: Always
+          name: pipelines-vote-ui
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 9090
+              protocol: TCP
+          env:
+            - name: VOTING_API_SERVICE_HOST
+              value: pipelines-vote-api
+            - name: VOTING_API_SERVICE_PORT
+              value: "9000"
