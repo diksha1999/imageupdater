@@ -1,13 +1,14 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: default
+namespace: tekton-testing
 
 resources:
   - deployment.yaml
-  - service.yaml
+  - svc.yaml
+  - route.yaml
 
 images:
-  - name: test-app
-    newName: docker.io/your-username/test-app
+  - name: vote-ui
+    newName: quay.io/openshift-pipeline/vote-ui
     newTag: latest
